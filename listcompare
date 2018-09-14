@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Sep 13 20:57:42 2018
+
+@author: owen
+"""
+
+sl=['c6', 'c7', 'c8', 'c9','F']
+
+l2=['F', 'c6']
+
+missing = []
+match = []
+
+for i in l2:
+    if i not in sl:
+        missing.append(i)
+    elif i in sl:
+        match.append(i)
