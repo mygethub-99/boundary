@@ -1,15 +1,16 @@
-#fopen = open('SLNSBOverlap5mile.txt')
-#contents = fopen.readlines()
-#fopen.close()
-
-
+missing=[]
+matches=[]
 with open('SLNSBOverlap5mile.txt') as f:
     next(f)
     for line in f:
         l1=line.split('\t')
-        sl = l1[2]
-        nsb = l1[7]
+        sl = l1[2].replace('"','')
+        sl = sl.split(',')
+        nsb = l1[7].replace('"','')
+        nsb = nsb.replace('\n','')
+        nsb = nsb.split(',')
         for i in nsb:
-            if i not in ls:
-                print ("missing")
-            else print ("contains"):
+            if i not in sl:
+                missing.append(i)
+            else:
+                matches.append(i)
