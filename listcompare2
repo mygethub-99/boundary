@@ -1,0 +1,15 @@
+#fopen = open('SLNSBOverlap5mile.txt')
+#contents = fopen.readlines()
+#fopen.close()
+
+
+with open('SLNSBOverlap5mile.txt') as f:
+    next(f)
+    for line in f:
+        l1=line.split('\t')
+        sl = l1[2]
+        nsb = l1[7]
+        for i in nsb:
+            if i not in ls:
+                print ("missing")
+            else print ("contains"):
