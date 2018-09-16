@@ -1,16 +1,43 @@
-missing=[]
-matches=[]
-with open('SLNSBOverlap5mile.txt') as f:
+junk = []
+
+with open('SLNSBOverlap5mile2.txt') as f:
     next(f)
+    holding=[]
     for line in f:
+        missing=[]
+        noLicense=[]
         l1=line.split('\t')
         sl = l1[2].replace('"','')
         sl = sl.split(',')
         nsb = l1[7].replace('"','')
         nsb = nsb.replace('\n','')
         nsb = nsb.split(',')
-        for i in nsb:
-            if i not in sl:
-                missing.append(i)
-            else:
-                matches.append(i)
+        count = len(nsb)
+        noLicense.append(l1[3])
+        while count > 0:
+            for i in nsb:
+                if i not in sl:
+                    missing.append(i)
+                count = count - 1
+        if missing == ['None']:
+            noLicense.append("null\n")
+        elif len(missing) > 0 :
+                noLicense.append(len(missing))
+                junk = noLicense
+        else:
+            noLicense.append("null\n")
+            junk = noLicense
+        
+        #You need to dump each check into a temp file then when done, put that file into the file being writen
+            
+
+            
+#    with open('deltplayreva.txt', 'w') as fs:
+#    fs.write("'FA_Code''Delta_SA''SAQ_Comp''Delta_ConStart''ForConStart'\
+#    'Delta_OnAir''ForCastOnAir''Delta_SAQ_OnAir'")
+#    fs.write("\n")
+#    for i in tofile:
+#        i = str(i)
+#        i = re.sub("[]()[,]", "", i)
+#        fs.write("{}\n".format(i))
+#fs.close()  
