@@ -1,8 +1,10 @@
-junk = []
+import re
 
-with open('SLNSBOverlap5mile2.txt') as f:
+holding = []
+
+with open('slnsboverlap.txt') as f:
     next(f)
-    holding=[]
+    
     for line in f:
         missing=[]
         noLicense=[]
@@ -13,31 +15,26 @@ with open('SLNSBOverlap5mile2.txt') as f:
         nsb = nsb.replace('\n','')
         nsb = nsb.split(',')
         count = len(nsb)
-        noLicense.append(l1[3])
+        noLicense.append(l1[0]), noLicense.append(l1[1]), noLicense.append(l1[3])
         while count > 0:
             for i in nsb:
                 if i not in sl:
                     missing.append(i)
                 count = count - 1
         if missing == ['None']:
-            noLicense.append("null\n")
+            noLicense.append("null")
         elif len(missing) > 0 :
-                noLicense.append(len(missing))
-                junk = noLicense
+            noLicense.append(len(missing))
         else:
-            noLicense.append("null\n")
-            junk = noLicense
+            noLicense.append("null")
+        holding.append(noLicense)
         
-        #You need to dump each check into a temp file then when done, put that file into the file being writen
             
-
-            
-#    with open('deltplayreva.txt', 'w') as fs:
-#    fs.write("'FA_Code''Delta_SA''SAQ_Comp''Delta_ConStart''ForConStart'\
-#    'Delta_OnAir''ForCastOnAir''Delta_SAQ_OnAir'")
-#    fs.write("\n")
-#    for i in tofile:
-#        i = str(i)
-#        i = re.sub("[]()[,]", "", i)
-#        fs.write("{}\n".format(i))
-#fs.close()  
+with open('output.txt', 'w') as fs:
+    fs.write('County''FIPS''FA''Num_Issues')
+    fs.write('\n')
+    for i in holding:
+        i = str(i)
+        i = re.sub("[]()[,]", "", i)
+        fs.write("{}\n".format(i))
+    fs.close()
