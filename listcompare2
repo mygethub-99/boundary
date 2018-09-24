@@ -2,7 +2,7 @@ import re
 
 holding = []
 
-with open('slnsboverlap.txt') as f:
+with open('shortlist.txt') as f:
     next(f)
     
     for line in f:
@@ -35,6 +35,6 @@ with open('output.txt', 'w') as fs:
     fs.write('\n')
     for i in holding:
         i = str(i)
-        i = re.sub("[]()[,]", "", i)
+        i = re.findall('[\w ]+[^\'\"\[\]]', i)
         fs.write("{}\n".format(i))
     fs.close()
