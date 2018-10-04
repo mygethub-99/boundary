@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Sep 27 20:11:16 2018
 Multiband cross check
@@ -6,10 +5,11 @@ Multiband cross check
 """
 import check_member as check
 output = [] #collects audit returned from check_member.py
-with open('query5mile.txt') as f:
+with open('query5mileNoQuote.txt') as f:
     next(f)
      
     for i in f:
+        i = i.replace('\n','')
         i = i.split('\t')
         count = 4
         holding = []
@@ -26,3 +26,12 @@ with open('query5mile.txt') as f:
                 holding.append(checkup)
                 count = count - 1
             output.append(holding)
+        
+with open('output.txt', 'w') as fs:
+    fs.write('FIPS,''FA,' '1900_Offender,' '850_Offender,' '700_Offender,' 'AWSOffeder')
+    fs.write('\n')
+    for i in output:
+        i = str(i)
+        #i = re.findall('[\w ]+[^\'\"\[\]]', i)
+        fs.write("{}\n".format(i))
+    fs.close()
