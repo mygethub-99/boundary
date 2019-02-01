@@ -1,0 +1,47 @@
+'Created on Jan 30th 2019
+'Builds MapInfo tables and output files for Python Main.py
+
+'Create 5 Mile highband buffer for SQL Select Query
+Open Table "C:\Mapinfo files\SpectrumBands\NSBAllFregs.TAB" Interactive
+Map From NSBAllFregs
+Create Table "NSBBuffer5mile" (FA_Location Integer,FIPS Smallint,Lat Float, Long Float,CL1900 Char(27),CL700 Char(4),CL850 Char(4),CL_AWS Char(29),hi_band Smallint) file "C:\Mapinfo files\SpectrumBands\NSBBuffer5mile.tab" TYPE NATIVE Charset "WindowsLatin1"
+Create Map For NSBBuffer5mile CoordSys Earth Projection 1, 104
+Add Map Layer NSBBuffer5mile
+Set Map Layer 1 Editable On
+Create Object As Buffer From NSBAllFregs Width hi_band Units "mi" Type Spherical Resolution 24 Into Table NSBBuffer5mile Group by Rowid Concurrency All Data FA_Location=FA_Location,FIPS=FIPS,Lat=Lat,Long=Long,CL1900=CL1900,CL700=CL700,CL850=CL850,CL_AWS=CL_AWS,hi_band=hi_band
+Commit Table NSBBuffer5mile Interactive
+
+'Create 12 Mile lowband buffer for SQL Select Query
+Create Table "NSBBuffer12mile" (FA_Location Integer,FIPS Smallint,Lat Float, Long Float,CL1900 Char(27),CL700 Char(4),CL850 Char(4),CL_AWS Char(29),low_band Smallint) file "C:\Mapinfo files\SpectrumBands\NSBBuffer12mile.tab" TYPE NATIVE Charset "WindowsLatin1"
+Create Map For NSBBuffer12mile CoordSys Earth Projection 1, 104
+Add Map Layer NSBBuffer12mile
+Set Map Layer 1 Editable On
+Create Object As Buffer From NSBAllFregs Width low_band Units "mi" Type Spherical Resolution 24 Into Table NSBBuffer12mile Group by Rowid Concurrency All Data FA_Location=FA_Location,FIPS=FIPS,Lat=Lat,Long=Long,CL1900=CL1900,CL700=CL700,CL850=CL850,CL_AWS=CL_AWS,low_band=low_band
+Commit Table NSBBuffer12mile Interactive
+Close Table NSBALLFreq Interactive
+
+'Run query to find overlapping FIPS and build compare table
+
+Open Table "C:\Mapinfo files\SpectrumBands\SpecLandAllBands.TAB" Interactive
+Add Map Auto Layer SpecLandAllBands
+Select
+SpecLandAllBands.name"SLname", SpecLandAllBands.FIPS "SLFIPS", SpecLandAllBands._1900 "SL1900", SpecLandAllBands._850 "SL850", SpecLandAllBands._700 "SL700", SpecLandAllBands.AWS "SLAWS", NSBBuffer12mile.FA_Location "FA", NSBBuffer12mile.Lat"Lat",NSBBuffer12mile.Long"Long",NSBBuffer12mile.CL1900 "S1900", NSBBuffer12mile.CL700 "S700", NSBBuffer12mile.CL850 "S850", NSBBuffer12mile.CL_AWS "SAWS"
+from SpecLandAllBands, NSBBuffer12mile
+where SpecLandAllBands.obj intersects NSBBuffer12mile.obj and SpecLandAllBands.fips <> NSBBuffer12mile.fips
+   
+into mySelection
+
+Browse * From mySelection
+Export "mySelection" Into "C:\Mapinfo files\SpectrumBands\lbinput.txt" Type "ASCII" CharSet "WindowsLatin1" Titles
+Close Table mySelection Interactive
+
+Select
+SpecLandAllBands.name"SLname", SpecLandAllBands.FIPS "SLFIPS", SpecLandAllBands._1900 "SL1900", SpecLandAllBands._850 "SL850", SpecLandAllBands._700 "SL700", SpecLandAllBands.AWS "SLAWS", NSBBuffer5mile.FA_Location "FA", NSBBuffer5mile.Lat "Lat", NSBBuffer5mile.Long "Long", NSBBuffer5mile.CL1900 "S1900", NSBBuffer5mile.CL700 "S700", NSBBuffer5mile.CL850 "S850", NSBBuffer5mile.CL_AWS "SAWS"
+from SpecLandAllBands, NSBBuffer5mile
+where SpecLandAllBands.obj intersects NSBBuffer5mile.obj and SpecLandAllBands.fips <> NSBBuffer5mile.fips
+   
+into mySelection2
+
+Browse * From mySelection2
+Export "mySelection2" Into "C:\Mapinfo files\SpectrumBands\hbinput.txt" Type "ASCII" CharSet "WindowsLatin1" Titles
+
