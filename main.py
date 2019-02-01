@@ -5,8 +5,13 @@ Multiband cross check
 """
 from functools import reduce
 import check_member as check
+
 output = [] #collects audit returned from check_member.py
-with open('HBPythonInput.txt') as f:
+
+#Request file name from user and opens file
+fn = input('Enter file name(hbinput or lbinput): ')
+fn1 = fn+'.txt'
+with open(fn1) as f:
     next(f)
 
 #Group SpectrumLandscape and cell site, by band, for comparison     
@@ -30,8 +35,8 @@ with open('HBPythonInput.txt') as f:
                 holding.append(outs)
                 count = count - 1
             output.append(holding)
-        
-with open('output.txt', 'w') as fs:
+fn = fn+'output.csv'        
+with open(fn, 'w') as fs:
     fs.write('FIPS,''FA,' '1900_Offender,' '850_Offender,' '700_Offender,' 'AWSOffeder')
     fs.write('\n')
     for i in output:
