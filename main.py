@@ -5,6 +5,9 @@ Multiband cross check
 """
 from functools import reduce
 import check_member as check
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
 
 output = [] #collects audit returned from check_member.py
 
@@ -46,3 +49,9 @@ with open(fn, 'w') as fs:
         i = i.replace('"', '')
         fs.write("{}\n".format(i))
 fs.close()
+
+#Open output file and then geocode it with Point data for plotting
+data=pd.read_csv(fn)
+data['coordinates']=[Point(xy) for xy in zip(data['Long'], data['Lat'])]
+gdata = gpd.GeoDataFrame(data, geometry='coordinates')
+gdata.crs={'init':'epsg:4326'}
